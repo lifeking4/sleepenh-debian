@@ -1,0 +1,33 @@
+Source: sleepenh
+Section: utils
+Priority: extra
+Maintainer: Pedro Zorzenon Neto <pzn@debian.org>
+Build-Depends: debhelper (>> 3.0.0)
+Standards-Version: 3.5.2
+
+Package: sleepenh
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Sleep until a given date with subsecond resolution
+ sleepenh is an sleep program for using in shell scripts
+ that need to perform a loop that repeats at a regular
+ time interval, without cumulative errors.
+ .
+ It supports microsecond resolution.
+ .
+ You can also specify the time you need between two calls
+ of sleepenh.
+ .
+ Here follows an usage example to clarify its purpose. This
+ example sends 'A' to ttyS0 every 1.2 seconds.
+   #!/bin/sh
+   # does not wait (or wait 0), just to get initial timestamp
+   TIMESTAMP=`sleepenh 0`
+   while true; do
+     # send the byte to ttyS0
+     echo -n "A" > /dev/ttyS0;
+     # wait until the required time
+     TIMESTAMP=`sleepenh $TIMESTAMP 1.200`;
+   done
+ .
+ For more details, please read the manpage.
