@@ -14,8 +14,9 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *  along with this program; if not, write to the
+ *  Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+ *  MA 02110-1301, USA.
  *
  * USAGE INSTRUCTIONS
  *
@@ -50,6 +51,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <math.h>
+#include <string.h>
 
 #define SHORTEST_SLEEP 0.00001 /* 10msec, a timeslice */
 #define RCSID    "$Id: sleepenh.c,v 1.2 2003/02/24 17:17:48 pzn Exp $"
@@ -79,7 +81,7 @@ int main(int argc, char *argv[]) {
 	      "         -- " RCSREV "\n"
 	      "         -- " RCSDATE "\n"
 	      "\n"
-	      "Copyright (C) 2003 - Pedro Zorzenon Neto <pzn@autsens.com>\n"
+	      "Copyright (C) 2003 - Pedro Zorzenon Neto\n"
 	      "Distributed under the conditions of FSF/GPL2 License.\n"
 	      "See the source code for more copyright and license information.\n"
 	      "\n"

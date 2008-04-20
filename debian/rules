@@ -1,21 +1,16 @@
 #!/usr/bin/make -f
+# -*- makefile -*-
 # Sample debian/rules that uses debhelper.
-# GNU copyright 1997 to 1999 by Joey Hess.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-# This is the debhelper compatibility version to use.
-export DH_COMPAT=3
 
 
-
-ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
-	CFLAGS += -g
-endif
-ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
-	INSTALL_PROGRAM += -s
-endif
 
 configure: configure-stamp
 configure-stamp:
@@ -32,8 +27,9 @@ build-stamp: configure-stamp
 
 	# Add here commands to compile the package.
 	$(MAKE)
+	#docbook-to-man debian/sleepenh.sgml > sleepenh.1
 
-	touch build-stamp
+	touch $@
 
 clean:
 	dh_testdir
@@ -41,18 +37,19 @@ clean:
 	rm -f build-stamp configure-stamp
 
 	# Add here commands to clean up after the build process.
-	-$(MAKE) clean
+	$(MAKE) clean
 
-	dh_clean
+	dh_clean 
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_clean -k 
 	dh_installdirs
 
 	# Add here commands to install the package into debian/sleepenh.
-	$(MAKE) install DESTDIR=$(CURDIR)/debian/sleepenh
+	$(MAKE) DESTDIR=$(CURDIR)/debian/sleepenh install
+
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -62,27 +59,28 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_installdebconf	
+	dh_installchangelogs 
 	dh_installdocs
-#	dh_installexamples
+	dh_installexamples
+#	dh_install
 #	dh_installmenu
+#	dh_installdebconf	
 #	dh_installlogrotate
 #	dh_installemacsen
 #	dh_installpam
 #	dh_installmime
+#	dh_python
 #	dh_installinit
 #	dh_installcron
-	dh_installman
 #	dh_installinfo
-#	dh_undocumented
-	dh_installchangelogs 
+	dh_installman
 	dh_link
 	dh_strip
 	dh_compress
 	dh_fixperms
+#	dh_perl
 #	dh_makeshlibs
 	dh_installdeb
-#	dh_perl
 	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
