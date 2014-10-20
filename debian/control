@@ -7,7 +7,9 @@ Standards-Version: 3.7.3
 
 Package: sleepenh
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends}
 Description: Sleep until a given date with subsecond resolution
  sleepenh is an sleep program for using in shell scripts
  that need to perform a loop that repeats at a regular
