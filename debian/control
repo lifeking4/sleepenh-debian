@@ -1,7 +1,7 @@
 Source: sleepenh
 Section: utils
 Priority: extra
-Maintainer: Pedro Zorzenon Neto <pzn@debian.org>
+Maintainer: Nicolas Schier <nicolas@hjem.rpa.no>
 Build-Depends: debhelper (>= 5)
 Standards-Version: 3.9.6
 
