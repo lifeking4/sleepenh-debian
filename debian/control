@@ -3,7 +3,7 @@ Section: utils
 Priority: extra
 Maintainer: Pedro Zorzenon Neto <pzn@debian.org>
 Build-Depends: debhelper (>= 5)
-Standards-Version: 3.7.3
+Standards-Version: 3.9.6
 
 Package: sleepenh
 Architecture: any
