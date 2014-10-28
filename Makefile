@@ -1,4 +1,5 @@
-# just a simple makefile
+CC = $(CROSS_COMPILE)gcc
+CFLAGS += -Wall -Wextra
 
 all: sleepenh manpage
 
@@ -6,9 +7,6 @@ clean:
 	rm -fv sleepenh sleepenh.1.gz
 
 distclean: clean
-
-sleepenh:
-	gcc -o sleepenh -Wall -O2 sleepenh.c
 
 manpage:
 	if [ ! -e "sleepenh.1.gz" ]; then \
