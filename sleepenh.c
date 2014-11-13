@@ -1,7 +1,8 @@
 /*
  * sleepenh.c - enhanced sleep command
  *
- * Copyright (C) 2003 - Pedro Zorzenon Neto
+ * Copyright (C) 2003 Pedro Zorzenon Neto
+ * Copyright (C) 2014 Nicolas Schier <nicolas+debian@hjem.rpa.no>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -54,9 +55,6 @@
 #include <string.h>
 
 #define SHORTEST_SLEEP 0.00001 /* 10msec, a timeslice */
-#define RCSID    "$Id: sleepenh.c,v 1.2 2003/02/24 17:17:48 pzn Exp $"
-#define RCSREV   "$Revision: 1.2 $"
-#define RCSDATE  "$Date: 2003/02/24 17:17:48 $"
 
 static int sigflag=0;
 
@@ -78,10 +76,10 @@ int main(int argc, char *argv[]) {
     {
       fprintf(stderr,
 	      "sleepenh -- an enhanced sleep program.\n"
-	      "         -- " RCSREV "\n"
-	      "         -- " RCSDATE "\n"
+	      "         -- " VCSVERSION "\n"
 	      "\n"
 	      "Copyright (C) 2003 - Pedro Zorzenon Neto\n"
+	      "Copyright (C) 2014 - Nicolas Schier\n"
 	      "Distributed under the conditions of FSF/GPL2 License.\n"
 	      "See the source code for more copyright and license information.\n"
 	      "\n"
