@@ -80,12 +80,16 @@ void version(FILE *f)
 void usage(FILE *f)
 {
 	fprintf(f,
-		"Usage: %s [INITIALTIME] TIMETOSLEEP\n"
+		"Usage: %s [[--warp|-w] INITIALTIME] TIMETOSLEEP\n"
 		"\n"
 		"An enhanced sleep program.\n"
 		"\n"
 		"Options:\n"
 		"  -h, --help     display this help and exit\n"
+		"  -w, --warp   warp resulting timestamp, when there is no need\n"
+		"               to sleep.  An immediatly following call of\n"
+		"               sleepenh with the resulting TIMESTAMP would\n"
+		"               most probably result in a real sleep.\n"
 		"  -V, --version  output version information and exit\n"
 		"\n"
 		"TIMETOSLEEP is in seconds, microsecond resolution, ex: 80.123456.\n"
@@ -102,6 +106,13 @@ int main(int argc, char *argv[]) {
   double et;  /* end time */
   double now; /* now */
   double it;  /* interval */
+  int warp = 0;
+
+  if ((argc > 1) &&
+      (!strcmp(argv[1], "--warp") || !strcmp(argv[1], "-w"))) {
+		warp = 1;
+		argc--, argv++;
+  }
 
   if (argc==1)
     {
@@ -154,6 +165,12 @@ int main(int argc, char *argv[]) {
 
   if ( it < SHORTEST_SLEEP )
     {
+      if (warp) {
+		/* warp in time -> loose events, but keep event regularity */
+		int tmp = -it / st;
+		double div = tmp * st;
+		et += div;
+      }
       /* has already timed out, shorted than a timeslice */
       printf("%f\n",et);
       return 1; /* success, time out */
