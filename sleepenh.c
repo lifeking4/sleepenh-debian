@@ -44,6 +44,9 @@
  * shell script usage example: see manpage
  */
 
+#define _GNU_SOURCE
+
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -62,6 +65,34 @@ void got_signal() {
   sigflag=1;
 }
 
+void version(FILE *f)
+{
+	fprintf(f,
+		"sleepenh " VCSVERSION "\n"
+		"\n"
+		"Copyright (C) 2003 Pedro Zorzenon Neto\n"
+		"Copyright (C) 2014 Nicolas Schier\n"
+		"License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>.\n"
+		"This is free software: you are free to change and redistribute it.\n"
+		"There is NO WARRANTY, to the extent permitted by law.\n");
+}
+
+void usage(FILE *f)
+{
+	fprintf(f,
+		"Usage: %s [INITIALTIME] TIMETOSLEEP\n"
+		"\n"
+		"An enhanced sleep program.\n"
+		"\n"
+		"Options:\n"
+		"  -h, --help     display this help and exit\n"
+		"  -V, --version  output version information and exit\n"
+		"\n"
+		"TIMETOSLEEP is in seconds, microsecond resolution, ex: 80.123456.\n"
+		"INITIALTIME is the output value of a previous execution of sleepenh.\n",
+		program_invocation_short_name);
+}
+
 int main(int argc, char *argv[]) {
   struct timeval tv;
   struct timezone tz;
@@ -74,23 +105,22 @@ int main(int argc, char *argv[]) {
 
   if (argc==1)
     {
-      fprintf(stderr,
-	      "sleepenh -- an enhanced sleep program.\n"
-	      "         -- " VCSVERSION "\n"
-	      "\n"
-	      "Copyright (C) 2003 - Pedro Zorzenon Neto\n"
-	      "Copyright (C) 2014 - Nicolas Schier\n"
-	      "Distributed under the conditions of FSF/GPL2 License.\n"
-	      "See the source code for more copyright and license information.\n"
-	      "\n"
-	      "Usage: %s timetosleep\n"
-	      "   or: %s initialtime timetosleep\n"
-	      "\n"
-	      "timetosleep is in seconds, microsecond resolution. Ex: 80.123456\n"
-	      "initialtime is the output value of a previous execution of sleepenh.\n"
-	      , argv[0], argv[0]);
+      version(stderr);
+      fprintf(stderr, "\n");
+      usage(stderr);
       return 10; /* failure, bad arguments */
     }
+
+  if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h") ||
+      !strcmp(argv[1], "--usage") || !strcmp(argv[1], "-u")) {
+	  usage(stdout);
+	  return 0;
+  }
+
+  if (!strcmp(argv[1], "--version") || !strcmp(argv[1], "-V")) {
+	  version(stdout);
+	  return 0;
+  }
 
   if(gettimeofday(&tv,&tz)!=0)
     {
