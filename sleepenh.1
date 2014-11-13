@@ -1,5 +1,5 @@
 .\"                                      Hey, EMACS: -*- nroff -*-
-.TH SLEEPENH 1 "2008/04/20"
+.TH SLEEPENH 1 "November 2014" "sleepenh" "User commands"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -13,11 +13,10 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-sleepenh \- an enhanced sleep program.
+sleepenh \- an enhanced sleep program
 .SH SYNOPSIS
 .B sleepenh
-.RI [ initial\-time ]
-.RI sleep\-time
+[[\fI\,--warp|-w\/\fR] \fI\,INITIALTIME\/\fR] \fI\,TIMETOSLEEP\/\fR
 .SH DESCRIPTION
 \fBsleepenh\fP is a program that can be used when there is a need
 to execute some functions periodically in a shell script. It was
@@ -25,23 +24,33 @@ not designed to be accurate for a single sleep, but to be
 accurate in a sequence of consecutive sleeps.
 .br
 After a successful execution, it returns to stdout the timestamp
-it finished running, that can be used as \fBinitial\-time\fP to a
+it finished running, that can be used as \fBINITIALTIME\fP to a
 successive execution of \fBsleepenh\fP.
 .SH OPTIONS
-There are no command line options. Run it without any option to
-get a brief help and version.
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+display this help and exit
+.TP
+\fB\-w\fR, \fB\-\-warp\fR
+warp resulting timestamp, when there is no need
+to sleep.  An immediatly following call of
+sleepenh with the resulting TIMESTAMP would
+most probably result in a real sleep.
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+output version information and exit
 .SH ARGUMENTS
-\fBsleep\-time\fP is a real number in seconds,
+\fBTIMETOSLEEP\fP is a real number in seconds,
 with microseconds resolution (1 minute, 20 seconds and 123456
 microseconds would be 80.123456).
 .br
-\fBinitial\-time\fP is a real number in seconds, with microseconds
+\fBINITIALTIME\fP is a real number in seconds, with microseconds
 resolution. This number is system dependent. In GNU/Linux systems,
 it is the number of seconds since midnight 1970\-01\-01 GMT. Do not
-try to get a good value of \fBinitial\-time\fP. Use the value supplied
+try to get a good value of \fBINITIALTIME\fP. Use the value supplied
 by a previous execution of \fBsleepenh\fP.
 .br
-If you don't specify \fBinitial\-time\fP, it is assumed the current\-time.
+If you don't specify \fBINITIALTIME\fP, it is assumed the current time.
 .SH EXIT STATUS
 An exit status greater or equal to 10 means failure.
 Known exit status:
@@ -50,8 +59,8 @@ Known exit status:
 Success.
 .TP
 .B 1
-Success. There was no need to sleep. (means that initial\-time +
-sleep\-time was greater than current\-time).
+Success. There was no need to sleep. (means that INITIALTIME +
+TIMETOSLEEP was greater than current time).
 .TP
 .B 10
 Failure. Missing command line arguments.
@@ -87,7 +96,7 @@ This program can be used to get the current time. Just execute:
 .TP
 sleepenh 0
 .SH BUGS
-It is not accurate for a single sleep. Short sleep\-times will also not
+It is not accurate for a single sleep. Short TIMETOSLEEPs will also not
 be accurate.
 .SH SEE ALSO
 .BR date (1),

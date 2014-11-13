@@ -1,7 +1,8 @@
 /*
  * sleepenh.c - enhanced sleep command
  *
- * Copyright (C) 2003 - Pedro Zorzenon Neto
+ * Copyright (C) 2003 Pedro Zorzenon Neto
+ * Copyright (C) 2014 Nicolas Schier <nicolas+debian@hjem.rpa.no>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -43,6 +44,9 @@
  * shell script usage example: see manpage
  */
 
+#define _GNU_SOURCE
+
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -54,14 +58,43 @@
 #include <string.h>
 
 #define SHORTEST_SLEEP 0.00001 /* 10msec, a timeslice */
-#define RCSID    "$Id: sleepenh.c,v 1.2 2003/02/24 17:17:48 pzn Exp $"
-#define RCSREV   "$Revision: 1.2 $"
-#define RCSDATE  "$Date: 2003/02/24 17:17:48 $"
 
 static int sigflag=0;
 
 void got_signal() {
   sigflag=1;
+}
+
+void version(FILE *f)
+{
+	fprintf(f,
+		"sleepenh " VCSVERSION "\n"
+		"\n"
+		"Copyright (C) 2003 Pedro Zorzenon Neto\n"
+		"Copyright (C) 2014 Nicolas Schier\n"
+		"License GPLv2+: GNU GPL version 2 or later <http://gnu.org/licenses/gpl.html>.\n"
+		"This is free software: you are free to change and redistribute it.\n"
+		"There is NO WARRANTY, to the extent permitted by law.\n");
+}
+
+void usage(FILE *f)
+{
+	fprintf(f,
+		"Usage: %s [[--warp|-w] INITIALTIME] TIMETOSLEEP\n"
+		"\n"
+		"An enhanced sleep program.\n"
+		"\n"
+		"Options:\n"
+		"  -h, --help     display this help and exit\n"
+		"  -w, --warp   warp resulting timestamp, when there is no need\n"
+		"               to sleep.  An immediatly following call of\n"
+		"               sleepenh with the resulting TIMESTAMP would\n"
+		"               most probably result in a real sleep.\n"
+		"  -V, --version  output version information and exit\n"
+		"\n"
+		"TIMETOSLEEP is in seconds, microsecond resolution, ex: 80.123456.\n"
+		"INITIALTIME is the output value of a previous execution of sleepenh.\n",
+		program_invocation_short_name);
 }
 
 int main(int argc, char *argv[]) {
@@ -73,26 +106,32 @@ int main(int argc, char *argv[]) {
   double et;  /* end time */
   double now; /* now */
   double it;  /* interval */
+  int warp = 0;
+
+  if ((argc > 1) &&
+      (!strcmp(argv[1], "--warp") || !strcmp(argv[1], "-w"))) {
+		warp = 1;
+		argc--, argv++;
+  }
 
   if (argc==1)
     {
-      fprintf(stderr,
-	      "sleepenh -- an enhanced sleep program.\n"
-	      "         -- " RCSREV "\n"
-	      "         -- " RCSDATE "\n"
-	      "\n"
-	      "Copyright (C) 2003 - Pedro Zorzenon Neto\n"
-	      "Distributed under the conditions of FSF/GPL2 License.\n"
-	      "See the source code for more copyright and license information.\n"
-	      "\n"
-	      "Usage: %s timetosleep\n"
-	      "   or: %s initialtime timetosleep\n"
-	      "\n"
-	      "timetosleep is in seconds, microsecond resolution. Ex: 80.123456\n"
-	      "initialtime is the output value of a previous execution of sleepenh.\n"
-	      , argv[0], argv[0]);
+      version(stderr);
+      fprintf(stderr, "\n");
+      usage(stderr);
       return 10; /* failure, bad arguments */
     }
+
+  if (!strcmp(argv[1], "--help") || !strcmp(argv[1], "-h") ||
+      !strcmp(argv[1], "--usage") || !strcmp(argv[1], "-u")) {
+	  usage(stdout);
+	  return 0;
+  }
+
+  if (!strcmp(argv[1], "--version") || !strcmp(argv[1], "-V")) {
+	  version(stdout);
+	  return 0;
+  }
 
   if(gettimeofday(&tv,&tz)!=0)
     {
@@ -126,6 +165,12 @@ int main(int argc, char *argv[]) {
 
   if ( it < SHORTEST_SLEEP )
     {
+      if (warp) {
+		/* warp in time -> loose events, but keep event regularity */
+		int tmp = -it / st;
+		double div = tmp * st;
+		et += div;
+      }
       /* has already timed out, shorted than a timeslice */
       printf("%f\n",et);
       return 1; /* success, time out */

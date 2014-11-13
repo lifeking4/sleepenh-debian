@@ -1,19 +1,30 @@
-CC = $(CROSS_COMPILE)gcc
-CFLAGS += -Wall -Wextra
+Q ?= @
+ifneq ($(Q),@)
+Q :=
+endif
 
-all: sleepenh manpage
+CC = gcc
+CFLAGS = -std=gnu11 -Wall -Wextra -O2
 
-clean:
-	rm -fv sleepenh sleepenh.1.gz
+targets := sleepenh sleepenh.1.gz
 
-distclean: clean
+all: $(targets)
 
-manpage:
-	if [ ! -e "sleepenh.1.gz" ]; then \
-	cat sleepenh.1 | gzip -9 > sleepenh.1.gz ; fi
+.clean = $(wildcard $(targets))
+distclean clean:
+ifneq ($(.clean),)
+	rm -f $(.clean)
+endif
 
-install: sleepenh manpage
-	mkdir -p ${DESTDIR}/usr/bin/
-	install -m 0755 -o root -g root sleepenh ${DESTDIR}/usr/bin/sleepenh
-	mkdir -p ${DESTDIR}/usr/share/man/man1/
-	install -m 0644 -o root -g root sleepenh.1.gz ${DESTDIR}/usr/share/man/man1/sleepenh.1.gz
+sleepenh: CFLAGS += -DVCSVERSION=$(call vcsversion)
+
+%.1.gz: %.1
+	gzip -9 < $< > $@
+
+install: $(targets)
+	install -D -m 0755 -o root -g root sleepenh ${DESTDIR}/usr/bin/sleepenh
+	install -D -m 0644 -o root -g root sleepenh.1.gz ${DESTDIR}/usr/share/man/man1/sleepenh.1.gz
+
+define vcsversion
+'$(shell git describe --dirty | sed -e 's,^\(.*\)/\([^/]\+\),\2/\1,;s,^.*$$,\"&\",')'
+endef
