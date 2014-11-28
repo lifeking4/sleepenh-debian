@@ -4,9 +4,6 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-DPKG_EXPORT_BUILDFLAGS = 1
-include /usr/share/dpkg/buildflags.mk
-
 vcsversion = $(shell sed -ne '1{s,^.*(\([0-9\.]\+\)-.*).*$$,\1,p;q}' < debian/changelog)
 
 %:
