@@ -4,9 +4,9 @@ Priority: extra
 Maintainer: Nicolas Schier <nicolas@hjem.rpa.no>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.6
-Homepage: https://gitorious.org/sleepenh/sleepenh/
-Vcs-Browser: https://gitorious.org/sleepenh/debian/
-Vcs-Git: git://gitorious.org/sleepenh/debian.git
+Homepage: https://github.com/nsc-deb/sleepenh
+Vcs-Browser: https://github.com/nsc-deb/sleepenh-debian
+Vcs-Git: https://github.com/nsc-deb/sleepenh-debian.git
 
 Package: sleepenh
 Architecture: any
