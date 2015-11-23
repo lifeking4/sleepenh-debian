@@ -167,9 +167,12 @@ int main(int argc, char *argv[]) {
     {
       if (warp) {
 		/* warp in time -> loose events, but keep event regularity */
-		int tmp = -it / st;
-		double div = tmp * st;
-		et += div;
+		int tmp;
+		double interval;
+
+		interval = et - st;
+		tmp = (now - st) / interval;
+		et = st + tmp * interval;
       }
       /* has already timed out, shorted than a timeslice */
       printf("%f\n",et);
