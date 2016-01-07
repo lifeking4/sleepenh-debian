@@ -1,3 +1,9 @@
+sleepenh (1.6) unstable; urgency=medium
+
+  * Fix variable descriptions and time warp
+
+ -- Nicolas Schier <n.schier@avm.de>  Thu, 07 Jan 2016 07:20:49 +0100
+
 sleepenh (1.5) unstable; urgency=medium
 
   * Add initial package changelog.
