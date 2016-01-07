@@ -1,0 +1,16 @@
+Description: Makefile: Add EXTRA_CFLAGS to CFLAGS
+Author: Nicolas Schier <nicolas@hjem.rpa.no>
+Forwarded: no
+Last-Update: 2015-01-07
+
+--- sleepenh-1.6.orig/Makefile
++++ sleepenh-1.6/Makefile
+@@ -4,7 +4,7 @@ Q :=
+ endif
+ 
+ CC = gcc
+-CFLAGS = -std=gnu11 -Wall -Wextra -O2
++CFLAGS = -std=gnu11 -Wall -Wextra -O2 $(EXTRA_CFLAGS)
+ 
+ targets := sleepenh sleepenh.1.gz
+ 
