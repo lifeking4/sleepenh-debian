@@ -102,10 +102,11 @@ int main(int argc, char *argv[]) {
   struct timezone tz;
   struct itimerval itv;
   struct sigaction sigact;
-  double st;  /* start time */
+  double st;  /* sleep time */
   double et;  /* end time */
   double now; /* now */
-  double it;  /* interval */
+  double it;  /* initial time */
+  double sleep_time; /* effective time to sleep */
   int warp = 0;
 
   if ((argc > 1) &&
@@ -161,18 +162,16 @@ int main(int argc, char *argv[]) {
     }
 
   et=it+st;
-  it=et-now;
+  sleep_time = et - now;
 
-  if ( it < SHORTEST_SLEEP )
+  if (sleep_time < SHORTEST_SLEEP)
     {
       if (warp) {
 		/* warp in time -> loose events, but keep event regularity */
 		int tmp;
-		double interval;
 
-		interval = et - st;
-		tmp = (now - st) / interval;
-		et = st + tmp * interval;
+		tmp = (now - it) / st;
+		et = it + tmp * st;
       }
       /* has already timed out, shorted than a timeslice */
       printf("%f\n",et);
@@ -185,8 +184,8 @@ int main(int argc, char *argv[]) {
   sigaction (SIGALRM, &sigact, NULL);
 
   /* set timer */
-  itv.it_value.tv_sec=(long int) it;
-  itv.it_value.tv_usec=((long int) (it*1000000)) % 1000000;
+  itv.it_value.tv_sec=(long int) sleep_time;
+  itv.it_value.tv_usec=((long int) (sleep_time*1000000)) % 1000000;
   itv.it_interval.tv_sec=0;
   itv.it_interval.tv_usec=0;
   setitimer(ITIMER_REAL,&itv,NULL);

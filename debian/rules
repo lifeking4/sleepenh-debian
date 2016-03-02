@@ -10,4 +10,4 @@ vcsversion = $(shell sed -ne '1{s,^.*(\([0-9\.]\+\)-.*).*$$,\1,p;q}' < debian/ch
 	dh $@
 
 override_dh_auto_build:
-	$(MAKE) vcsversion='\"$(call vcsversion)\"'
+	$(MAKE) EXTRA_CFLAGS=-g vcsversion='\"$(call vcsversion)\"'

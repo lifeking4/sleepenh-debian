@@ -1,3 +1,12 @@
+sleepenh (1.6-1) unstable; urgency=medium
+
+  * New upstream release:
+    + Fix variable descriptions and time warp
+  * Makefile: add EXTRA_CFLAGS (via patch)
+  * debian/rules: build with debug symbols
+
+ -- Nicolas Schier <nicolas@hjem.rpa.no>  Thu, 07 Jan 2016 08:02:25 +0100
+
 sleepenh (1.5-1) unstable; urgency=medium
 
   * New upstream release:
